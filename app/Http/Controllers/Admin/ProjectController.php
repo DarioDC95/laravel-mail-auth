@@ -8,6 +8,9 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Technology;
 use App\Models\Type;
+use App\Models\Lead;
+use App\Mail\NewContact;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
@@ -69,6 +72,15 @@ class ProjectController extends Controller
         if($request->has('technologies')) {
             $newProject->technologies()->attach($form_data['technologies']);
         }
+
+        $new_lead = new Lead();
+        $new_lead->title = $form_data['title'];
+        $new_lead->content = $form_data['content'];
+        $new_lead->slug = $form_data['slug'];
+
+        $new_lead->save();
+
+        Mail::to('info@boolpress.com')->send(new NewContact($new_lead));
 
         return redirect()->route('admin.projects.index')->with('message', 'Il Progetto è stato aggiunto correttamente');
 
