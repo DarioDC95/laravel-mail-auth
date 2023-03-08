@@ -9,6 +9,13 @@
                         <h2>{{ $project->title }}</h2>
                     </div>
                     <div class="col-12 mb-5">
+                        @if ($project->cover_path)
+                            <img src="{{ asset('storage/' . $project->cover_path) }}" alt="{{ $project->title }}">
+                        @else
+                            <span class="text-secondary">Immagine NON disponibile</span>
+                        @endif
+                    </div>
+                    <div class="col-12 mb-5">
                         @if ($project->type)
                             <div>Tipologia: <span class="fw-semibold fs-5">{{ $project->type->name }}</span></div>              
                         @else

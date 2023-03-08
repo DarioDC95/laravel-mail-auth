@@ -8,6 +8,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Technology;
 use App\Models\Type;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectController extends Controller
 {
@@ -51,6 +52,13 @@ class ProjectController extends Controller
 
         // AGGIUNGO UNA COPPIA CHIAVE/VALORE ALL'ARRAY $form_data
         $form_data['slug'] = $slug;
+
+        //  TRANSFORMO LA COVER_IMG NEL PATH DA INSERIRE COME STRINGA NEL DATABASE 
+        if($request->has('cover_path')) {
+            $img_cover = Storage::disk('public')->put('cover_path', $request->cover_path);
+
+            $form_data['cover_path'] = $img_cover;
+        }
 
         /* 
         $newProject = new Project();
@@ -106,8 +114,20 @@ class ProjectController extends Controller
 
         $form_data['slug'] = $slug;
 
+        // FACCIAMO L'UPLOAD DEL FILE VERIFICANDO SE NE ESISTE GIA' UNO IN MODO DA ELIMINARE QUELLO VECCHIO IN PUBLIC
+        if($request->has('cover_path')) {
+            if ($project->cover_path) {
+                Storage::delete($project->cover_path);
+            }
+            
+            $img_cover = Storage::disk('public')->put('cover_path', $request->cover_path);
+
+            $form_data['cover_path'] = $img_cover;
+        }
+
         $project->update($form_data);
 
+        // AGGIORNIAMO LA TABELLA PONTE
         if($request->has('technologies')) {
             $project->technologies()->sync($form_data['technologies']);
         }

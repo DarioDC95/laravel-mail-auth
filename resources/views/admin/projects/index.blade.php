@@ -30,6 +30,7 @@
                         <table class="table table-striped">
                             <thead>
                                 <th>id</th>
+                                <th>cover</th>
                                 <th>Tipologia</th>
                                 <th>Tecnologia</th>
                                 <th>Titolo</th>
@@ -41,6 +42,13 @@
                                     <tr>
                                         <td>{{ $project->id }}</td>
                                         <td>
+                                            @if ($project->cover_path)
+                                                <img src="{{ asset('storage/' . $project->cover_path) }}" alt="{{ $project->title }}">
+                                            @else
+                                                <span class="text-secondary">NON disponibile</span>
+                                            @endif
+                                        </td>
+                                        <td>
                                             @if ($project->type_id)
                                                 {{ $project->type->name }}
                                             @else
@@ -51,7 +59,7 @@
                                             @forelse ($project->technologies as $technology)
                                                 {{ $technology->name }}<br>
                                             @empty
-                                                NON disponibile
+                                                <span class="text-secondary">NON disponibile</span>
                                             @endforelse
                                         </td>
                                         <td>{{ $project->title }}</td>

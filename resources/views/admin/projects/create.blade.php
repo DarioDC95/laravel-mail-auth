@@ -16,7 +16,7 @@
                 </div>
                 <div class="row">    
                     <div class="col-12">
-                        <form action="{{ route('admin.projects.store') }}" method="POST">
+                        <form action="{{ route('admin.projects.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                             <div class="form-group mb-4">
                                 <label class="control-label">Titolo</label>
@@ -25,6 +25,13 @@
                                     @foreach ($errors->get('title') as $value)
                                         <div class="text-danger">{{ $value }}</div>
                                     @endforeach
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="cover_path" class="form-label">Carica un immagine</label>
+                                <input class="form-control" name="cover_path" type="file" id="cover_path">
+                                @error('cover_path')
+                                    <div class="text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="form-group mb-4">
