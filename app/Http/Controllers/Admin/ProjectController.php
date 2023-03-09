@@ -161,6 +161,11 @@ class ProjectController extends Controller
         // PRIMA COSA DA FARE IN ASSOLUTO E' CANCELLARE I RECORD RELATIVI DALLA TABELLA PONTE, A RISCHIO DI CORROMPERE IL DATABASE. Ciò non serve se si è provveduto con "cascedeOnDelete" nella creazione della tabella.
         // $project->technologies()->sync([]);
 
+        // CANCELLIAMO L'IMMAGINE DALLO STORAGE SE PRESENTE
+        if ($project->cover_path) {
+            Storage::delete($project->cover_path);
+        }
+
         // DOPO DI CHE CANCELLIAMO L'ELEMENTO
         $project->delete();
 
